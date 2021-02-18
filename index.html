@@ -70,7 +70,6 @@
 
     <!-- Main Script -->
     <script type="module">
-      let endpoint = document.getElementById("endpoint").value;
       let output = document.getElementById("output");
       let form = document.getElementById("recordForm");
 
@@ -100,10 +99,18 @@
       // The main difference from fetchOne() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
+        let endpoint = document.getElementById("endpoint").value;
         hideRecordForm();
         fetch(endpoint)
-          .then((response) => response.json())
-          .then((data) => (output.innerHTML = JSON.stringify(data)));
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            output.innerHTML = response.statusText + ": " + response.status;
+            throw new Error(response.status);
+          })
+          .then((data) => (output.innerHTML = JSON.stringify(data)))
+          .catch((error) => console.log(error));
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -111,11 +118,19 @@
       // The main difference from fetchAll() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
+        let endpoint = document.getElementById("endpoint").value;
         hideRecordForm();
         let result = window.prompt("Enter record id");
         fetch(endpoint + "/" + result)
-          .then((response) => response.json())
-          .then((data) => (output.innerHTML = JSON.stringify(data)));
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            output.innerHTML = response.statusText + ": " + response.status;
+            throw new Error(response.status);
+          })
+          .then((data) => (output.innerHTML = JSON.stringify(data)))
+          .catch((error) => console.log(error));
       }
 
       // This function should use fetch to create one entry in the given endpoint.
@@ -123,6 +138,7 @@
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
       function createRecord(action) {
+        let endpoint = document.getElementById("endpoint").value;
         console.log("called");
         if (action === "show") {
           showRecordForm();
@@ -130,11 +146,19 @@
           let title = document.getElementById("title").value;
           let author = document.getElementById("author").value;
 
-          // fetch(endpoint, {
-          //   method: "POST",
-          //   headers: { "Content-Type": "application/json" },
-          //   body: '{"title":"' + title + '", "author":"' + author + '"}',
-          // }).then((result) => console.log(result));
+          fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: '{"title":"' + title + '", "author":"' + author + '"}',
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              output.innerHTML = response.statusText + ": " + response.status;
+              throw new Error(response.status);
+            })
+            .catch((error) => console.log(error));
         }
       }
 
@@ -143,6 +167,7 @@
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
       function updateRecord(action) {
+        let endpoint = document.getElementById("endpoint").value;
         if (action === "show") {
           showRecordForm();
           showIDcontainer();
@@ -155,7 +180,15 @@
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: '{"title":"' + title + '", "author":"' + author + '"}',
-          });
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              }
+              output.innerHTML = response.statusText + ": " + response.status;
+              throw new Error(response.status);
+            })
+            .catch((error) => console.log(error));
         }
       }
 
@@ -165,11 +198,20 @@
       // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO
       // delete all, only delete one.
       function deleteRecord() {
+        let endpoint = document.getElementById("endpoint").value;
         hideRecordForm();
         let result = window.prompt("Enter record id");
         fetch(endpoint + "/" + result, {
           method: "DELETE",
-        });
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            output.innerHTML = response.statusText + ": " + response.status;
+            throw new Error(response.status);
+          })
+          .catch((error) => console.log(error));
       }
 
       window.addEventListener("DOMContentLoaded", () => {
