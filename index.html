@@ -106,11 +106,10 @@
             if (response.ok) {
               return response.json();
             }
-            output.innerHTML = response.statusText + ": " + response.status;
             throw new Error(response.status);
           })
           .then((data) => (output.innerHTML = JSON.stringify(data)))
-          .catch((error) => console.log(error));
+          .catch((error) => (output.innerHTML = error));
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -126,11 +125,10 @@
             if (response.ok) {
               return response.json();
             }
-            output.innerHTML = response.statusText + ": " + response.status;
             throw new Error(response.status);
           })
           .then((data) => (output.innerHTML = JSON.stringify(data)))
-          .catch((error) => console.log(error));
+          .catch((error) => (output.innerHTML = error));
       }
 
       // This function should use fetch to create one entry in the given endpoint.
@@ -139,7 +137,6 @@
       // the writeup to view the URL pattern for create and update
       function createRecord(action) {
         let endpoint = document.getElementById("endpoint").value;
-        console.log("called");
         if (action === "show") {
           showRecordForm();
         } else if (action === "submit") {
@@ -155,10 +152,10 @@
               if (response.ok) {
                 return response.json();
               }
-              output.innerHTML = response.statusText + ": " + response.status;
               throw new Error(response.status);
             })
-            .catch((error) => console.log(error));
+            .then((data) => (output.innerHTML = JSON.stringify(data)))
+            .catch((error) => (output.innerHTML = error));
         }
       }
 
@@ -185,10 +182,10 @@
               if (response.ok) {
                 return response.json();
               }
-              output.innerHTML = response.statusText + ": " + response.status;
               throw new Error(response.status);
             })
-            .catch((error) => console.log(error));
+            .then((data) => (output.innerHTML = JSON.stringify(data)))
+            .catch((error) => (output.innerHTML = error));
         }
       }
 
@@ -208,10 +205,10 @@
             if (response.ok) {
               return response.json();
             }
-            output.innerHTML = response.statusText + ": " + response.status;
             throw new Error(response.status);
           })
-          .catch((error) => console.log(error));
+          .then((data) => (output.innerHTML = JSON.stringify(data)))
+          .catch((error) => (output.innerHTML = error));
       }
 
       window.addEventListener("DOMContentLoaded", () => {
